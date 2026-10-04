@@ -16,10 +16,10 @@ import { useDebouncedCallback } from "use-debounce";
 export default function NotesClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [onModalClose, setOnModalClose] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data, isError, isLoading, isFetching, error } = useQuery({
-    queryKey: ["query", searchQuery, currentPage],
+  const { data } = useQuery({
+    queryKey: ["notes", searchQuery, currentPage],
     queryFn: () => fetchNotes(searchQuery, currentPage),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
@@ -33,8 +33,8 @@ export default function NotesClient() {
     300,
   );
 
-  const isModalClose = () => setOnModalClose(false);
-  const isModalOpen = () => setOnModalClose(true);
+  const onModalClose = () => setIsModalOpen(false);
+  const onModalOpen = () => setIsModalOpen(true);
 
   return (
     <div className={css.app}>
@@ -47,16 +47,16 @@ export default function NotesClient() {
             setPage={setCurrentPage}
           />
         )}
-        <button onClick={isModalOpen} className={css.button}>
+        <button onClick={onModalOpen} className={css.button}>
           Create note +
         </button>
       </div>
       {/* {(isLoading || isFetching) && <Loader />}
       {isError && <UsersError errorMessage={error.message} />} */}
       {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
-      {onModalClose && (
-        <Modal onClose={isModalClose}>
-          <NoteForm onClose={isModalClose} />
+      {isModalOpen && (
+        <Modal onClose={onModalClose}>
+          <NoteForm onClose={onModalClose} />
         </Modal>
       )}
       <Toaster />

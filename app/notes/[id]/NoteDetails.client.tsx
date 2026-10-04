@@ -18,8 +18,9 @@ export default function NoteDetailsClient() {
     refetchOnMount: false,
   });
 
-  if (isError || !note) return <p>Something went wrong.</p>;
   if (isLoading) return <p>Loading, please wait...</p>;
+
+  if (isError || !note) return <p>Something went wrong.</p>;
 
   const formattedDate = note.updatedAt ? note.updatedAt : note.createdAt;
 
